@@ -1,0 +1,5 @@
+aiohttp
+python-dateutil
+aiohttp-jinja2
+jinja2
+pytest

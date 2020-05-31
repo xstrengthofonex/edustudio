@@ -1,0 +1,74 @@
+{% extends "students/profile.jinja2" %}
+
+
+{% block breadcrumbs %}
+
+{% endblock %}
+
+{% block detail %}
+    <div id="student-info" class="mb-4">
+        <h5 class="mb-3">학생 정보</h5>
+        <div class="row">
+            <div class="col-sm">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <th scope="col">이름</th>
+                            <td>{{ student.name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">나이</th>
+                            <td>{{ student.age }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">성별</th>
+                            <td>{{ student.gender }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">학교</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">상태</th>
+                            <td>{{ student.status }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm">
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <th scope="col">학보 휴대폰</th>
+                            <td>{{ student.parent_phone_number }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">학생 휴대폰</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">주소</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">메모</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th scope="col">가입한 날짜</th>
+                            <td>{{ student.date_joined }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+     <div id="class-info" class="mb-4">
+         <h5 class="mb-3">클래스 정보</h5>
+         <ul class="list-group list-group-flush">
+             {% for class in student.classes %}
+                <li class="list-group-item">{{ class }}</li>
+             {% endfor %}
+         </ul>
+    </div>
+{% endblock %}
