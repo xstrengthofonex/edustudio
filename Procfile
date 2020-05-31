@@ -1,1 +1,1 @@
-web: python -m edustudio.app
+web: python -m edustudio.web.app
