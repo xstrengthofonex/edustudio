@@ -29,7 +29,7 @@ def create():
 
 
 if __name__ == '__main__':
-    web.run_app(create(), port=3000)
+    web.run_app(create(), port=settings.PORT)
 
 
 
