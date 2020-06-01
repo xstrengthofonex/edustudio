@@ -16,22 +16,24 @@
                 <button class="sort btn btn-secondary" data-sort="status">클래스</button>
             </div>
            <ul class="list list-group">
-                {% for student in students %}
-                    <li class="list-group-item">
-                        <a href="/students/{{ student.id }}" class="name mr-2">
-                            {{ student.name }}
-                        </a>
-                        {% if student.status %}
-                            <span class="status badge badge-secondary badge-pill">{{ student.status }}</span>
-                        {% endif %}
-                        <div>
-                            <small class="text-muted">글래스</small>
-                            {% for class in student.classes %}
-                                <span class="class badge badge-light">{{ class }}</span>
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% endfor %}
+               {% if students %}
+               {% for student in students %}
+               <li class="list-group-item">
+                   <a href="/students/{{ student.id }}" class="name mr-2">
+                       {{ student.name }}
+                   </a>
+                   {% if student.status %}
+                   <span class="status badge badge-secondary badge-pill">{{ student.status }}</span>
+                   {% endif %}
+                   <div>
+                       <small class="text-muted">클래스</small>
+                       {% for class in student.classes %}
+                       <span class="class badge badge-light">{{ class }}</span>
+                       {% endfor %}
+                   </div>
+               </li>
+               {% endfor %}
+               {% endif %}
            </ul>
         </div>
     </div>

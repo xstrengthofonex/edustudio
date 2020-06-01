@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum
-from typing import List, NamedTuple, Optional
+from typing import List, NamedTuple, Optional, TypedDict
 from uuid import UUID
 
 import aiohttp_jinja2
@@ -75,6 +75,14 @@ class StudentDetail(object):
     classes: List[str] = field(default_factory=list)
 
 
+@dataclass(frozen=True)
+class StudentProfile:
+    id: str
+    name: str
+    parent_phone_number: str
+    status: str
+
+
 def calculate_age(today: date, date_of_birth: date) -> int:
     age = relativedelta(today, date_of_birth)
     return age.years
@@ -107,15 +115,35 @@ def show_date_joined(date_joined: date) -> str:
     return str(date_joined)
 
 
-def create_listable_students(students_: List[Student]) -> List[ListableStudent]:
+class StudentListView(TypedDict):
+    students: List[ListableStudent]
+
+
+class StudentDetailView(TypedDict):
+    student_profile: StudentProfile
+    student_detail: StudentDetail
+
+
+class StudentAttendanceView(TypedDict):
+    student_profile: StudentProfile
+
+
+def create_student_list_view(students_: List[Student]) -> StudentListView:
     def make_listable_student(student: Student) -> ListableStudent:
         return ListableStudent(
             id=str(student.id),
             name=student.name,
             status=show_status(student.status),
-            classes=[show_class(c) for c in sorted(student.classes, key=lambda c: c.time_slot)]
-        )
-    return [make_listable_student(s) for s in students_]
+            classes=[show_class(c) for c in sorted(student.classes, key=lambda c: c.time_slot)])
+    return dict(students=[make_listable_student(s) for s in students_])
+
+
+def create_student_profile(student: Student) -> StudentProfile:
+    return StudentProfile(
+        id=str(student.id),
+        name=student.name,
+        status=show_status(student.status),
+        parent_phone_number=student.contact.parent_phone_number)
 
 
 def create_student_detail(student: Student) -> StudentDetail:
@@ -128,6 +156,17 @@ def create_student_detail(student: Student) -> StudentDetail:
         date_joined=show_date_joined(student.date_joined),
         status=show_status(student.status),
         classes=[show_class(c) for c in sorted(student.classes, key=lambda c: c.time_slot)])
+
+
+def create_student_detail_view(student: Student) -> StudentDetailView:
+    return dict(
+        student_profile=create_student_profile(student),
+        student_detail=create_student_detail(student))
+
+
+def create_student_attendance_view(student: Student) -> StudentAttendanceView:
+    return dict(
+        student_profile=create_student_profile(student))
 
 
 students = [
@@ -179,8 +218,7 @@ async def handle_home(_: web.Request):
 def create_student_list_handler() -> Handler:
     @aiohttp_jinja2.template("students/list.jinja2")
     async def handle(_: web.Request) -> dict:
-        listable_students = create_listable_students(students)
-        return dict(students=listable_students)
+        return create_student_list_view(students)
     return handle
 
 
@@ -193,7 +231,7 @@ def create_student_detail_handler() -> Handler:
     async def handle(request: web.Request) -> dict:
         if student_id := request.match_info.get("student_id"):
             if student := get_student(student_id):
-                return dict(student=create_student_detail(student))
+                return create_student_detail_view(student)
         raise web.HTTPNotFound()
     return handle
 
@@ -203,6 +241,6 @@ def create_student_attendance_handler():
     async def handle(request: web.Request) -> dict:
         if student_id := request.match_info.get("student_id"):
             if student := get_student(student_id):
-                return dict(student=create_student_detail(student))
+                return create_student_attendance_view(student)
         raise web.HTTPNotFound()
     return handle

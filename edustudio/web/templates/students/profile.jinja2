@@ -10,20 +10,20 @@
     <div class="mt-4 mb-4 container">
         <ul class="nav justify-content-center mb-4">
             <li class="nav-item">
-                <a class="nav-link" href="/students/{{ student.id }}">학생 상세</a>
+                <a class="nav-link" href="/students/{{ student_profile.id }}">학생 상세</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/students/{{ student.id }}/attendance">출결 현황</a>
+                <a class="nav-link" href="/students/{{ student_profile.id }}/attendance">출결 현황</a>
             </li>
         </ul>
         <div id="student-profile" class="mb-4">
             <div id="student-header" class="text-center">
                 <img src="/static/default-user-image.png"
                      class="profile-img rounded-circle" alt="User Image">
-                <h2>{{ student.name }}</h2>
-                <p>학부모님 <b>{{ student.parent_phone_number }}</b></p>
-                {% if student.status %}
-                    <span class="badge badge-secondary badge-pill">{{ student.status }}</span>
+                <h2>{{ student_profile.name }}</h2>
+                <p>학부모님 <b>{{ student_profile.parent_phone_number }}</b></p>
+                {% if student_profile.status %}
+                    <span class="badge badge-secondary badge-pill">{{ student_profile.status }}</span>
                 {% endif %}
             </div>
             {% block detail %}{% endblock %}
