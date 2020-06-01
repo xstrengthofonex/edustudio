@@ -2,6 +2,46 @@
 
 {% block detail %}
     <div id="attendance-info">
-        <h5 class="mb-3">출결 현황</h5>
+        <h5 class="mb-3">출결 통계</h5>
+        <div id=date-range-form" class="mb-4">
+            <form method="get">
+                <div class="form-row">
+                    <div class="col">
+                        <input type="date" class="form-control" name="max-date" value="{{ today }}"/>
+                    </div> ~
+                    <div class="col">
+                        <input type="date" class="form-control" name="min-date" value="{{ today }}"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">조회</button>
+                </div>
+            </form>
+        </div>
+        <div id="attendance-records" class="row">
+            {% for record in attendance_records %}
+            <div class="col-sm mb-4">
+                <h6>{{ record.class_name }}</h6>
+                <div>
+                    <span class="badge badge-pill badge-success">
+                        출석 <span class="badge badge-pill badge-light">{{ record.days_present }}</span>
+                    </span>
+                    <span class="badge badge-pill badge-warning">
+                        지각 <span class="badge badge-pill badge-light">{{ record.days_late }}</span>
+                    </span>
+                    <span class="badge badge-pill badge-danger">
+                        결석 <span class="badge badge-pill badge-light">{{ record.days_absent }}</span>
+                    </span>
+                    <hr>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ record.percentage }}%;"
+                             aria-valuenow="25"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{ record.percentage }}%
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
